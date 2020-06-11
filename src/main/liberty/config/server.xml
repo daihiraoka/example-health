@@ -1,0 +1,33 @@
+<server description="Liberty server">
+    <featureManager>
+        <feature>microProfile-3.2</feature>
+        <feature>javaee-8.0</feature>
+    </featureManager>
+
+    <httpEndpoint host="*" httpPort="${default.http.port}" 
+        httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
+
+    <dataSource id="DefaultDataSource" jndiName="jdbc/health-api" jdbcDriverRef="mysql-driver"
+                type="javax.sql.ConnectionPoolDataSource" transactional="true">
+
+        <properties url="${ENV_MYSQL_URL}"
+                    databaseName="${ENV_MYSQL_DB_NAME}"
+                    user="${ENV_MYSQL_USER}"
+                    password="${ENV_MYSQL_PWD}"/>
+        <connectionManager maxIdleTimeout="20000s"/>
+    </dataSource>
+
+    <jdbcDriver id="mysql-driver"
+                javax.sql.XADataSource="com.mysql.cj.jdbc.MysqlXADataSource"
+                javax.sql.ConnectionPoolDataSource="com.mysql.cj.jdbc.MysqlConnectionPoolDataSource"
+                libraryRef="mysql-library"/>
+
+    <library id="mysql-library">
+	    <fileset id="mysqlFileSet" dir="${server.config.dir}/resources"
+                 includes="mysql-connector-java*.jar"/>
+    </library>
+
+
+
+    <webApplication location="starter-app.war" contextRoot="/"/>
+</server>
